@@ -16,6 +16,7 @@ extensions.  The following are a short list of scholarly papers that could form
 the basis of a written critique and presentation (WCP) on RPKI and ROV to
 satisfy UIC Computer Science PhD degree requirements.
 
+
 ## Primary Comparative Sources:
 
 * Gilad, Y, Cohen A, Herzberg A, Schapira M, Shulman H.  [Are We There Yet? On RPKI's Deployment and Security](https://www.ndss-symposium.org/wp-content/uploads/sites/25/2017/09/ndss2017_06A-3_Gilad_paper.pdf).  Network and Distributed Security Symposium ( NDSS) 2017.
@@ -24,21 +25,23 @@ satisfy UIC Computer Science PhD degree requirements.
 
 * Hlavacek T, Herzberg A, Shulman H, Waidner M.  [Practical Experience: Methodologies for Measuring Route Origin Validation](https://ieeexplore.ieee.org/abstract/document/8416522).  48th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN) 2018.
 
+
 ## Secondary Sources:
 
-* Gilad Y, Hlavacek T, Herzberg A, Schapira M, Shulman H.  [Perfect is the Enemy of Good: Setting Realistic Goals for BGP Security](www.cs.huji.ac.il/~schapiram/DISCO__HotNets.pdf).  17th ACM Workshop on Hot Topics in Networks (HOTNETS) 2018.
+* Lychev R, Goldberg S, Schapira M.  [BGP Security in Partial Deployment: Is the Juice Worth the Squeeze?](https://dl.acm.org/citation.cfm?id=2486010).  ACM SIGCOMM 2013.
 
-* Yoo C, Wishnick D.  [Lowering Legal Barriers to RPKI Adoption](https://papers.ssrn.com/sol3/Papers.cfm?abstract_id=3308619).  U of Penn Law School, Public Law Research Paper 19-02 (2018).
-
-* Cohen A, Gilad Y, Herzberg A, Schapira M.  [Jumpstarting BGP Security with Path-End Validation](https://dl.acm.org/citation.cfm?id=2934883). ACM SIGCOMM 2016.
+* Heilman E, Cooper D, Reyzin L, Goldberg S.  [From the Consent of the Routed: Improving the Transparency of the RPKI](https://dl.acm.org/citation.cfm?id=2626293).  ACM SIGCOMM 2014.
 
 * Iamartino D, Pelsser C, Bush R.  [Measuring Bgp Route Origin Registration and Validation](https://link.springer.com/chapter/10.1007/978-3-319-15509-8_3). Passive and Active Network Measurement (PAM) 2015.
 
 * Cohen A, Gilad Y, Herzberg A, Schapira M.  [One Hop for RPKI, One Giant Leap for BGP Security](https://dl.acm.org/citation.cfm?id=2834078). 14th ACM Workshop on Hot Topics in Networks (HOTNETS) 2015.
 
-* Heilman E, Cooper D, Reyzin L, Goldberg S.  [From the Consent of the Routed: Improving the Transparency of the RPKI](https://dl.acm.org/citation.cfm?id=2626293).  ACM SIGCOMM 2014.
+* Cohen A, Gilad Y, Herzberg A, Schapira M.  [Jumpstarting BGP Security with Path-End Validation](https://dl.acm.org/citation.cfm?id=2934883). ACM SIGCOMM 2016.
 
-* Lychev R, Goldberg S, Schapira M.  [BGP Security in Partial Deployment: Is the Juice Worth the Squeeze?](https://dl.acm.org/citation.cfm?id=2486010).  ACM SIGCOMM 2013.
+* Yoo C, Wishnick D.  [Lowering Legal Barriers to RPKI Adoption](https://papers.ssrn.com/sol3/Papers.cfm?abstract_id=3308619).  U of Penn Law School, Public Law Research Paper 19-02 (2018).
+
+* Gilad Y, Hlavacek T, Herzberg A, Schapira M, Shulman H.  [Perfect is the Enemy of Good: Setting Realistic Goals for BGP Security](www.cs.huji.ac.il/~schapiram/DISCO__HotNets.pdf).  17th ACM Workshop on Hot Topics in Networks (HOTNETS) 2018.
+
 
 ## Normative Sources:
 
@@ -63,14 +66,14 @@ satisfy UIC Computer Science PhD degree requirements.
 
 ## Informative Sources:
 
-* Huston, G.  [NANOG 74: Securing the routing system](https://blog.apnic.net/2018/10/19/nanog-74-securing-the-routing-system/).  APNIC blog, October 19, 2018.
+* Butler K, Farley T, McDaniel P, Rexford J.  [A Survey of BGP Security Issues and Solutions](https://cise.ufl.edu/~butler/pubs/bgpsurvey.pdf).  Proceedings of the IEEE, Vol. 98, No. 1, January 2010.
 
-* [Route Security]https://pc.nanog.org/static/published/meetings/NANOG74/1760/20181003_Tzvetanov_Security_Track_Bgp_v1.pdf).  NANOG 74: Security Track, October, 2018.
-
-* Reuter A.  [Measuring the Adoption of RPKI Route Origin Validation: Update](https://ripe76.ripe.net/archives/video/32/).  Lightning talk, RIPE 76, May 2018.
+* Huston G, Rossi M.  [Securing BGP - A Literature Survey](http://www.potaroo.net/papers/ieee/bgp_survey_2010.pdf).  IEEE Communications Surveys and Tutorials, 2010.
 
 * Huston G, Bush R.  [Securing BGP with BGPsec](http://wattle.apnic.net/papers/isoc/2011-07/bgpsec.pdf).  The Internet Protocol Journal, Vol. 14, No. 2, June 2011.
 
-Huston G, Rossi M.  [Securing BGP - A Literature Survey](http://www.potaroo.net/papers/ieee/bgp_survey_2010.pdf).  IEEE Communications Surveys and Tutorials, 2010.
+* Reuter A.  [Measuring the Adoption of RPKI Route Origin Validation: Update](https://ripe76.ripe.net/archives/video/32/).  Lightning talk, RIPE 76, May 2018.
 
-Butler K, Farley T, McDaniel P, Rexford J.  [A Survey of BGP Security Issues and Solutions](https://cise.ufl.edu/~butler/pubs/bgpsurvey.pdf).  Proceedings of the IEEE, Vol. 98, No. 1, January 2010.
+* [Route Security]https://pc.nanog.org/static/published/meetings/NANOG74/1760/20181003_Tzvetanov_Security_Track_Bgp_v1.pdf).  NANOG 74: Security Track, October, 2018.
+
+* Huston, G.  [NANOG 74: Securing the routing system](https://blog.apnic.net/2018/10/19/nanog-74-securing-the-routing-system/).  APNIC blog, October 19, 2018.
