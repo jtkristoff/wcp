@@ -74,6 +74,6 @@ satisfy UIC Computer Science PhD degree requirements.
 
 * Reuter A.  [Measuring the Adoption of RPKI Route Origin Validation: Update](https://ripe76.ripe.net/archives/video/32/).  Lightning talk, RIPE 76, May 2018.
 
-* [Route Security]https://pc.nanog.org/static/published/meetings/NANOG74/1760/20181003_Tzvetanov_Security_Track_Bgp_v1.pdf).  NANOG 74: Security Track, October, 2018.
+* [Route Security](https://pc.nanog.org/static/published/meetings/NANOG74/1760/20181003_Tzvetanov_Security_Track_Bgp_v1.pdf).  NANOG 74: Security Track, October, 2018.
 
 * Huston, G.  [NANOG 74: Securing the routing system](https://blog.apnic.net/2018/10/19/nanog-74-securing-the-routing-system/).  APNIC blog, October 19, 2018.
