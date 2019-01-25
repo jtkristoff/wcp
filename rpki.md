@@ -72,6 +72,8 @@ satisfy UIC Computer Science PhD degree requirements.
 
 * Huston G, Bush R.  [Securing BGP with BGPsec](http://wattle.apnic.net/papers/isoc/2011-07/bgpsec.pdf).  The Internet Protocol Journal, Vol. 14, No. 2, June 2011.
 
+* Gilad, Y.  [Are We There Yet?  On RPKI Deployment and Security](https://www.ndss-symposium.org/ndss2017/ndss-2017-programme/are-we-there-yet-rpkis-deployment-and-security/).  NDSS 2017.
+
 * Reuter A.  [Measuring the Adoption of RPKI Route Origin Validation: Update](https://ripe76.ripe.net/archives/video/32/).  Lightning talk, RIPE 76, May 2018.
 
 * Shulman, H.  [On RPKI's Deployment and Security of BGP](https://www.youtube.com/watch?v=F3nCYtg0Rso).  ACNS 2018.
@@ -79,3 +81,5 @@ satisfy UIC Computer Science PhD degree requirements.
 * [Route Security](https://pc.nanog.org/static/published/meetings/NANOG74/1760/20181003_Tzvetanov_Security_Track_Bgp_v1.pdf).  NANOG 74: Security Track, October, 2018.
 
 * Huston, G.  [NANOG 74: Securing the routing system](https://blog.apnic.net/2018/10/19/nanog-74-securing-the-routing-system/).  APNIC blog, October 19, 2018.
+
+* Cunha, I.  [BGP Experiment - NANOG mailing list thread](https://mailman.nanog.org/pipermail/nanog/2019-January/098761.html).  January, 2018.
