@@ -1,10 +1,15 @@
 # UIC CS PhD WCP
 
-Committee: Jason Polakis (chair), Chris Kanich, TBD
+Committee: [Jason Polakis](https://www.cs.uic.edu/~polakis/) (chair),
+[Chris Kanich](https://www.cs.uic.edu/~ckanich/),
+[Philip Yu](https://www.cs.uic.edu/PSYu/)
 
-Topic Ideas:
+Selected Topic:
+
+* [The RPKI and Route Origin Validation: Advances in Deployment and Measurement](rpki.md)
+
+Other Topic Ideas:
 
 * [Packet-flooding Denial of Service (DoS) Attacks and Defenses](ddos.md)
 * [DNS Hijacking Threats and Countermeasures](dns.md)
-* [BGPSEC RPKI: A Survey of Deployment and Adoption](rpki.md)
 * [Secure and Trusted Routing](routing.md)
