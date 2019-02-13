@@ -83,3 +83,5 @@ satisfy UIC Computer Science PhD degree requirements.
 * Huston, G.  [NANOG 74: Securing the routing system](https://blog.apnic.net/2018/10/19/nanog-74-securing-the-routing-system/).  APNIC blog, October 19, 2018.
 
 * Cunha, I.  [BGP Experiment - NANOG mailing list thread](https://mailman.nanog.org/pipermail/nanog/2019-January/098761.html).  January, 2018.
+
+* Haag W, Montgomery D, Barker W, Tan A.  [Protecting the Integrity of Internet Routing: Border Gateway Protocol (BGP) Route Origin Validation](https://www.nccoe.nist.gov/sites/default/files/library/sp1800/sidr-piir-nist-sp1800-14-draft.pdf).  NIST SP1800-14 draft, September 2018.
