@@ -19,7 +19,7 @@ satisfy UIC Computer Science PhD degree requirements.
 
 ## Primary Comparative Sources:
 
-* Gilad, Y, Cohen A, Herzberg A, Schapira M, Shulman H.  [Are We There Yet? On RPKI's Deployment and Security](https://www.ndss-symposium.org/wp-content/uploads/sites/25/2017/09/ndss2017_06A-3_Gilad_paper.pdf).  Network and Distributed Security Symposium ( NDSS) 2017.
+* Gilad, Y, Cohen A, Herzberg A, Schapira M, Shulman H.  [Are We There Yet? On RPKI's Deployment and Security](https://www.ndss-symposium.org/wp-content/uploads/2017/09/ndss2017_06A-3_Gilad_paper.pdf).  Network and Distributed Security Symposium ( NDSS) 2017.
 
 * Reuter A, Bush R, Cunha I, Katz-Bassett E, Schmidt T, Wählisch M.  [Towards a Rigorous Methodology for Measuring Adoption of RPKI Route Validation and Filtering](https://dl.acm.org/citation.cfm?id=3211856).  ACM SIGCOMM Computer Communication Review 48, no. 1, pp. 19-27, 2018.
 
