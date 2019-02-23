@@ -1,0 +1,167 @@
+\documentclass[sigconf]{acmart}
+
+% https://tex.stackexchange.com/questions/346292/how-to-remove-conference-information-from-the-acm-2017-sigconf-template
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain} % removes running headers
+
+\bibliographystyle{unsrt}
+
+\usepackage{graphicx}
+\usepackage{listings}
+
+\begin{document}
+
+% use protected (~) whitespace to control title on second line
+\title{The RPKI and Route Origin Validation: Advances~in~Deployment~and~Measurement}
+\subtitle{PhD Qualifier Examination - Critical Review}
+\author{John Kristoff}
+\affiliation{\department{Computer Science}\institution{University of Illinois at Chicago}}
+\email{jkrist3@uic.edu}
+
+\begin{abstract}
+
+Routing leaks and hijacks have plagued the Internet ecosystem since the
+late 1990's.  These events, often unintentional, are recurring reminders
+of the risk the Internet infrastructure is subject to.  The Resource
+Public Key Infrastructure (RPKI) has arisen as an important and
+necessary component to facilitate secure Internet routing.  Many network
+operators are now publishing digitally signed certificates of address
+prefixes and their associated route origins into the RPKI.  A smaller,
+but burgeoning community of operators have begun deploying route origin
+validation capabilities to limit the propagation of invalid routing
+information in disagreement with the RPKI.  Now researchers are building
+systems and techniques to evaluate how the RPKI is being populated and
+used, drawing comparisons to other Internet infrastructure security
+services such as the extensions to the domain name system.  Private and
+localized validation policy decisions pose measurement challenges for
+would-be secure routing surveyors however.  Operator polling, passive
+observation of route updates, controlled route announcement experiments,
+and data plane analysis are among the common techniques devised to
+estimate deployment today.  When operators and route collection tools
+incorporate route validation state in data collection systems,
+researchers will be able to enhance their methods further still.
+
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:Introduction}
+
+The Internet is network of networks.  Each network that forms the larger
+whole is commonly represented and referred to as an autonomous system
+(AS).  To form a loop-free connected graph, an AS typically uses the
+border gateway protocol (BGP), the Internet routing standard defined in
+IETF RFC 4271 to connect to one or more other autonomous
+systems.\cite{rekhter_border_2006}  AS-to-AS routers exchange and relay
+reachability information using BGP update messages, which include one or
+more address prefixes, an associated origin AS identifier, and other
+attributes as appropriate.
+
+BGP is unique among most common Internet standard routing protocols due
+to the varied and widespread use of local policy configuration options
+available at each router node and within an AS.  Each AS therefore may
+form different views of the larger Internet topology by accepting,
+rejecting, relaying, or altering routing information.  That is, while a
+loop-free topology remains a critical feature of BGP, the shortest path
+to any destination may be a secondary goal depending on local
+administrator policy.  For example, one network may choose to reject or
+withhold a route update containing a particular AS deemed untrustworty.
+To illustrate another common scenario, an AS may devalue routing
+information in order to prefer one path over another.  These types of
+local policy decisions affect local path computations, but can also
+impose policy onto neighboring networks and beyond, narrowing the path
+selection decisions further downstream.
+
+In addition to the added complexity local policy configurations imply,
+the data conveyed in routing update messages between BGP speakers come
+with no express means of authenticity.  This means that by default, as
+long as the BGP message is well formed, a routing update with invalid
+path data may find its way into the path computation process, wreaking
+havoc and corrupting the computed topology of one or more autonomous
+systems.  How does a BGP receiver evaluate routing information when an
+autonomous neighbor is untrustworthy either due to accident or malicious
+intent?  Approaches to protection from invalid routing data have varied,
+again dealt with in each autonomous system as a local policy decision.
+Consequently, overall Internet routing infrastructure robustness against
+invalid routing data varies widely from AS to AS.  While a variety of
+solutions have been deployed, the Internet has lacked a comprehensive,
+standard approach to authenticating routing data distributed through
+BGP.  Unfortunately, the threats of invalid routing data are not
+hypothetical.
+
+In 1997, a unique set of circumstances coalesced at just the right place
+and time to cause a major disruption in the Internet routing
+system.\cite{barret_routing_1997}  A small Internet service provider
+(ISP) both disaggregated and redistributed a large number of Internet
+address prefixes, sending these updates upstream to a larger ISP.  These
+numerous and errorneous updates cascaded to many other networks.  To
+many Internet router configurations the updates were accepted and used
+to recompute paths.  Instead of of a better path, many of intended
+destinations covered by these updates became unreachable as routers
+started forwarding traffic towards the wrong ISP.
+
+Just over a decade later, another widely observed routing anomaly
+impacted the popular YouTube streaming video
+service.\cite{brown_pakistan_2008}  Pakistan Telecom, intending to block
+access to specific addresses used by YouTube from within its network
+accidentally leaked a route update to an upstream provider, which in
+turn propagated this preferred route update to many other networks.
+The proliferation of this update sent many of the world's YouTube users
+towards Pakistan Telecom, effectively into an Internet black hole.
+
+The aforementioned network infrastructure mishaps are among the most
+popular in the history of Internet routing.  However, events such these,
+even when less well known, recur with surprising frequency.  Often these
+events can be classified as accidents, but there is evidence many
+anomalies have been intentionally malicious.\cite{madory_bgp_2018}
+Whether the events are benign or costly, inadvertent or deliberate,
+mechanisms to limit their occurrence have been an ongoing area of
+research, experimentation, and development.
+
+This paper evaluates the deployment and measurement efforts of a new
+approach to hardening the Internet routing system against illegimate
+routing updates.  The rest of the paper is organized as follows: In \S
+\ref{sec:Background} the history of secure routing is considered as two
+distinct eras.  The first era summarizes popular techniques and tools
+network operators have deployed to limit the spread of invalid or
+unwanted routing information.  The second era presents an overview of
+the resource public key infrastructure (RPKI), route origin validation
+(ROV), and related standards efforts that form the basis for the bulk of
+this paper.  In \S \ref{sec:Methodologies}, approaches to measuring the
+deploying of the RPKI and ROV from three recent research papers are
+summarized.    \S \ref{sec:Discussion} further evaluates and critiques
+the prior research.  \S \ref{sec:Future Work} argues for the inclusion
+and utilization of route validation states in route monitoring systems
+of the future.  The paper concludes in \S \ref{sec:Conclusion}.
+
+\section{Background}\label{sec:Background}
+
+Addresses/Prefixes.  ASNs.  RIRs.  Routing.  Routing security.  History
+and time line to RPKI.
+
+The Resource Public Key
+Infrastructure (RPKI), an Internet routing-specific PKI, anchored at the
+five regional Internet registries (RIRs) is the starting point for a
+repository of cryptographically signed route object authorizations
+(ROAs).  ROAs
+
+\section{Methodologies}\label{sec:Methodologies}
+
+Hmm.
+
+\section{Discussion}\label{sec:Discussion}
+
+Hah.
+
+\section{Future Work}\label{sec:Future Work}
+
+Baz.
+
+\section{Conclusion}\label{sec:Conclusion}
+
+Baf.
+
+\bibliography{wcp}
+
+\end{document}
