@@ -531,23 +531,118 @@ In what was the oops heard 'round the world, a routing blunder at an eastern US 
 	year = {1997}
 }
 
-@book{brown_pakistan_2008,
+@misc{brown_pakistan_2008,
 	title = {Pakistan hijacks {YouTube}},
 	url = {https://web.archive.org/web/20080228113848/http://www.renesys.com/blog/2008/02/pakistan_hijacks_youtube_1.shtml},
 	abstract = {Late in the (UTC) day on 24 February 2008, Pakistan Telecom (AS 17557) began advertising a small part of YouTube's (AS 36561) assigned network. This story is almost as old as BGP. Old hands will recognize this as, fundamentally, the same problem as the infamous AS 7007 from 1997, a more recent ConEd mistake of early 2006 and even TTNet's Christmas Eve gift 2004.},
 	urldate = {2019-02-22},
-	publisher = {renesys blog},
+	journal = {renesys {\textbar} blog},
 	author = {Brown, Martin},
 	month = feb,
 	year = {2008}
 }
 
-@book{madory_bgp_2018,
+@misc{madory_bgp_2018,
 	title = {{BGP} {Hijack} of {Amazon} {DNS} to {Steal} {Crypto} {Currency}},
 	url = {https://internetintel.oracle.com/blog-single.html?id=BGP+Hijack+of+Amazon+DNS+to+Steal+Crypto+Currency},
 	abstract = {esterday morning we posted a tweet (below) that Amazon’s authoritative DNS service had been impacted by a routing (BGP) hijack.  Little did we know this was part of an elaborate scheme to use the inherent security weaknesses of DNS and BGP to pilfer crypto currency, but that remarkable scenario appears to have taken place.},
-	publisher = {Internet Intelligence Blog},
+	journal = {Internet Intelligence Blog},
 	author = {Madory, Doug},
 	month = apr,
 	year = {2018}
+}
+
+@book{moskowitz_address_1996,
+	series = {Request for {Comments}},
+	title = {Address {Allocation} for {Private} {Internets}},
+	url = {https://rfc-editor.org/rfc/rfc1918.txt},
+	abstract = {This document describes address allocation for private internets. This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.},
+	number = {1918},
+	publisher = {RFC Editor},
+	author = {Moskowitz, Robert and Karrenberg, Daniel and Rekhter, Yakov and Lear, Eliot and Groot, Geert Jan de},
+	month = feb,
+	year = {1996},
+	doi = {10.17487/RFC1918},
+	note = {Published: RFC 1918},
+	file = {Full Text:/home/jtk/.zotero/zotero/q6kl3daw.default/zotero/storage/P25DC3H9/Moskowitz et al. - 1996 - Address Allocation for Private Internets.pdf:application/pdf}
+}
+
+@misc{nlnog_bgp_2019,
+	title = {{BGP} {Filter} {Guides}},
+	url = {https://bgpfilterguide.nlnog.net/},
+	abstract = {Guidance on BGP Filtering},
+	urldate = {2019-02-23},
+	journal = {BGP Filter Guides},
+	author = {NLNOG},
+	year = {2019}
+}
+
+@book{durand_bgp_2015,
+	series = {Request for {Comments}},
+	title = {{BGP} {Operations} and {Security}},
+	url = {https://rfc-editor.org/rfc/rfc7454.txt},
+	abstract = {The Border Gateway Protocol (BGP) is the protocol almost exclusively used in the Internet to exchange routing information between network domains. Due to this central nature, it is important to understand the security measures that can and should be deployed to prevent accidental or intentional routing disturbances. This document describes measures to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering. It also describes measures to better control the flow of routing information, using prefix filtering and automation of prefix filters, max-prefix filtering, Autonomous System (AS) path filtering, route flap dampening, and BGP community scrubbing.},
+	number = {7454},
+	publisher = {RFC Editor},
+	author = {Durand, Jerome and Pepelnjak, Ivan and Doering, Gert},
+	month = feb,
+	year = {2015},
+	doi = {10.17487/RFC7454},
+	note = {Published: RFC 7454},
+	file = {Full Text:/home/jtk/.zotero/zotero/q6kl3daw.default/zotero/storage/UD5SXXQB/Durand et al. - 2015 - BGP Operations and Security.pdf:application/pdf}
+}
+
+@book{bates_representation_1995,
+	series = {Request for {Comments}},
+	title = {Representation of {IP} {Routing} {Policies} in a {Routing} {Registry} (ripe-81++)},
+	url = {https://rfc-editor.org/rfc/rfc1786.txt},
+	abstract = {This document is an update to the original `ripe-81' proposal for representing and storing routing polices within the RIPE database. It incorporates several extensions proposed by Merit Inc. and gives details of a generalized IP routing policy representation to be used by all Internet routing registries. It acts as both tutorial and provides details of database objects and attributes that use and make up a routing registry. This memo provides information for the Internet community. This memo does not specify an Internet standard of any kind.},
+	number = {1786},
+	publisher = {RFC Editor},
+	author = {Bates, Tony and Gerich, Elise and Joncheray, Laurent and Jouanigot, Jean-Michel and Karrenberg, Daniel and Terpstra, Marten and Yu, Jessica},
+	month = mar,
+	year = {1995},
+	doi = {10.17487/RFC1786},
+	note = {Published: RFC 1786},
+	file = {Full Text:/home/jtk/.zotero/zotero/q6kl3daw.default/zotero/storage/644FN2GF/1995 - Representation of IP Routing Policies in a Routing.pdf:application/pdf}
+}
+
+@article{khan_comparative_2013,
+	title = {A {Comparative} {Study} on {IP} {Prefixes} and {Their} {Origin} {Ases} in {BGP} and the {IRR}},
+	volume = {43},
+	issn = {0146-4833},
+	url = {http://doi.acm.org/10.1145/2500098.2500101},
+	doi = {10.1145/2500098.2500101},
+	abstract = {The IRR is a set of globally distributed databases with which ASes can register their routing and address-related information. It is often believed that the quality of the IRR data is not reliable since there are few economic incentives for the ASes to register and update their routing information timely. To validate these negative beliefs, we carry out a comprehensive analysis of (IP prefix, its origin AS) pairs in BGP against the corresponding information registered with the IRR, and vice versa. Considering the BGP and IRR practices, we propose a methodology to match the (IP prefix, origin AS) pairs between the IRR and BGP. We observe that the practice of registering IP prefi xes and origin ASes with the IRR is prevalent. However, the quality of the IRR data can vary substantially depending on routing registries, regional Internet registries (to which ASes belong), and AS types. We argue that the IRR can help improve the security level of BGP routing by making BGP routers selectively rely on the corresponding IRR data considering these observations.},
+	number = {3},
+	urldate = {2019-02-24},
+	journal = {SIGCOMM Comput. Commun. Rev.},
+	author = {Khan, Akmal and Kim, Hyun-chul and Kwon, Taekyoung and Choi, Yanghee},
+	month = jul,
+	year = {2013},
+	keywords = {bgp, inter-domain routing, irr},
+	pages = {16--24},
+	file = {ACM Full Text PDF:/home/jtk/.zotero/zotero/q6kl3daw.default/zotero/storage/FFAVTM2M/Khan et al. - 2013 - A Comparative Study on IP Prefixes and Their Origi.pdf:application/pdf}
+}
+
+@article{kent_secure_2000,
+	title = {Secure border gateway protocol ({S}-{BGP})},
+	volume = {18},
+	number = {4},
+	journal = {IEEE Journal on Selected areas in Communications},
+	author = {Kent, Stephen and Lynn, Charles and Seo, Karen},
+	year = {2000},
+	pages = {582--592},
+	file = {Full Text:/home/jtk/.zotero/zotero/q6kl3daw.default/zotero/storage/I8FPBS5K/Kent et al. - 2000 - Secure border gateway protocol (S-BGP).pdf:application/pdf}
+}
+
+@article{white_securing_2003,
+	title = {Securing {BGP}: {soBGP}},
+	volume = {6},
+	number = {3},
+	journal = {Internet Protocol Journal},
+	author = {White, Russ},
+	month = sep,
+	year = {2003},
+	pages = {15--22}
 }
