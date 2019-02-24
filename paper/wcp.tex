@@ -52,7 +52,8 @@ The Internet is a network of networks.  Each network that forms the
 larger whole is commonly represented and referred to as an autonomous
 system (AS).  To form a loop-free connected graph, an AS typically uses
 the border gateway protocol (BGP), the Internet routing standard defined
-in IETF RFC 4271 to connect to one or more other autonomous
+by the Internet Engineering Task Force (IETF) request for comments (RFC)
+4271 to connect to one or more other autonomous
 systems.\cite{rekhter_border_2006}  AS-to-AS routers exchange and relay
 reachability information using BGP update messages, which include one or
 more address prefixes, an associated origin AS identifier, and other
@@ -145,21 +146,23 @@ concludes in \S \ref{sec:Conclusion}.
 
 \section{Background}\label{sec:Background}
 
-Unique to BGP is the rich feature set the protocol and router
-implementations make available.  An administrator can easily suppress,
-create, or alter BGP route update messages.  These features provide
-enormous flexibility and many networks make use of these capabilities
-within their network in a variety of innovative ways.  The ease and
-frequency with which these features can be used often lead to complexity
-and uncertainty.  Indeed, across different autonomous systems,
-differences in \emph{BGP policy} can present very different views of the
-global Internet routing system.
+Secure routing conjures up images of different solutions for different
+challenges.  To secure routing could imply mechanisms to thwart
+byzantine failure or the use of encryption to protect the privacy of
+routing data in transit.  It may may suggest a series of operator best
+practices to limit access and configuration mistakes with hardware.  For
+the purposes of this paper, and in terms of BGP, this paper is
+particularly concerned with authenticating the origin AS in the AS path
+attribute and the authorization granted the AS to originate an
+associated address prefix in the update message.  Attention therefore
+coverges on a subset of technologies that arose out of the Secure
+Inter-Domain Routing (SIDR) working group in the IETF.
 
-While a complete tutorial and history of secure Internet routing is
-beyond the scope of this paper, a brief review of popular approaches and
-technologies relevant to understanding the RPKI and ROV is provided.
-The reader is encouraged to review the references provided for
-additional detail.
+While a complete tutorial and history of approaches to secure routing on
+the Internet is beyond the scope of this paper, a brief review of
+popular approaches and technologies relevant to understanding the RPKI,
+route origin authorizations (ROAs), and ROV is provided.  The reader is
+encouraged to review the references provided for additional detail.
 
 \subsection{Route Filters and Prefix Limits}
 
@@ -174,15 +177,15 @@ limit may trigger an alert or shut down the BGP peering session.
 
 Network providers commonly use route filters to reject route
 announcements they never expect to see.  For instance, if AS
-\emph{49152} is the sole originator of IPv4 address prefix
-\texttt{192.0.2.0/24}, an appropriate route filter might reject any
-announcement for \texttt{192.0.2.0/24} or smaller overlapping prefix
-from other networks.  See Listing~\ref{lst:route filter} for an example
-BGP policy implementing a route filter to reject any route announcements
-for any address space covered by IETF RFC 1918
+\emph{49152} deems reachability to the IPv4 address prefix
+\texttt{192.0.2.0/24} undesirable, a route filter could be applied to
+reject any announcement for \texttt{192.0.2.0/24} or smaller overlapping
+prefix from other networks.  See Listing~\ref{lst:route filter} for an
+example BGP policy implementing a route filter to reject route
+announcements for any address space covered by IETF RFC 1918
 prefixes.\cite{moskowitz_address_1996}
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,caption={Example Junos route filter},label={lst:route filter}]
+\begin{lstlisting}[float,basicstyle=\footnotesize\ttfamily,caption={Example Junos route filter},label={lst:route filter}]
 policy-options {
     prefix-list rfc1918 {
         10.0.0.0/8;                         
@@ -220,10 +223,10 @@ support these early challenges was the design and creation of Internet
 Routing Registries (IRRs).\cite{bates_representation_1995}  The IRR
 system was an outgrowth of the desire to express an autonomous system's
 routing policy, primarily for troubleshooting and documentation
-purposes.  Tools to help automate verifying routing data against IRR
-data soon appeared.  In fact, when the \emph{AS 7007
+purposes.  Tools to help automate the validation of routing updates
+against IRR data soon appeared.  In fact, when the \emph{AS 7007
 Incident}\footnote{This is the name given to the routing event in 1997
-described in this paper above.  The 7007 refers to the autonomous system
+described in this paper above.  7007 refers to the autonomous system
 number assigned to the small ISP originating the invalid routes.}
 occurred a number of operators suggested that the use of a routing
 registry could have prevented the problem.
@@ -240,28 +243,105 @@ security would take hold.
 \subsection{S-BGP and soBGP}
 
 At the turn of the 21st century, two extensions to BGP, S-BGP and soBGP,
-were similar attempts to bring cryptographic authentication to routing
-data.\cite{kent_secure_2000}\cite{white_securing_2003}  Both approaches
-specify a public key infrastructure (PKI) and both modify BGP to
-incorporate authentication into the routing protocol.  Neither approach
-gained sufficient traction to become deployed systems however.
-Nonetheless, their use of a PKI foreshadowed a system to come that would
-capture the imagination of operators and soon demonstrate promising
-levels of real-world deployment.
+were proposals to incorporate cryptographic authentication into the
+routing system.\cite{kent_secure_2000}\cite{white_securing_2003}  Both
+approaches specified a public key infrastructure (PKI) and both modified
+BGP to incorporate authentication siginalling into the routing protocol.
+Neither approach gained sufficient traction to become deployed systems
+however.  Nonetheless, their use of a PKI foreshadowed a system to come
+that would capture the imagination of operators and soon demonstrate
+promising levels of real-world deployment.
 
 \subsection{The RPKI}
 
+At the center of modern secure routing technology today is the resource
+public key infrastructure (RPKI), a distributed, hierarchical repository
+containing cryptographically signed objects such as attestations of
+autonomous systems associated with Internet address
+prefixes.\cite{lepinski_infrastructure_2012}  The RPKI is formally
+structured with each regional Internet registry (RIR) anchoring the
+repository with the allocated address space they are responsible for.
+Address holders work with their respective RIR to populate the RPKI or
+to coordinate further delegation of the repository further.
+
+The RPKI could be thought of as cross between the IRR system and a
+PKI-based system like those of attempted by S-BGP and soBGP.  The RPKI,
+like the IRRs, but unlike S-BGP and soBGP, is maintained outside of the
+BGP protocol itself.  The RPKI leverages the fundamental principles of
+an X.509-based PKI for routing data like those from S-BGP and soBGP, but
+unlike the IRR, decrees a unified, hierarchical structure, anchored and
+supported by all RIRs as an integrated service offering.  The initial
+objects populating the RPKI provide the means by which to perform route
+validation, an overview of which is covered below.
+
 \subsection{ROAs}
+
+Route origin authorizations (ROAs) are individually signed objects
+associating allocated address prefixes with an authorized AS to
+originate routes for these prefixes in the BGP system.  Neither BGP
+route updates nor RIR address allocation records alone make this
+relationship explicit.  With the RPKI system and the ability to populate
+it with ROAs, the Internet routing system now has the two key building
+blocks on the way toward a secure routing infrasturcture.
+
+See Listing~\ref{lst:ROA} for an example ROA as recently published in
+the American Registry for Internet Numbers (ARIN) RIR operational test
+and evaluation environment.  A ROA can have only one origin AS
+associated with one or more prefixes.  Each prefix can specify a
+\emph{maxLength} value for the prefix, indicating the most specific
+prefix length the origin AS is authorized to announce.  Like X.509
+certificates, other attributes such as a digital signature and
+expiration time are associated with each ROA.
+
+\begin{lstlisting}[float,basicstyle=\footnotesize\ttfamily,caption={Example AS 20130 ROA},label={lst:ROA}]
+ROA Name: DEPAUL AS20130
+Origin AS: 20130
+Validity Period: 02-12-2019 to 02-12-2029
+Resources:
+    2604:95C0::/32
+    2620:0:2250::/48
+    75.102.192.0/18
+    216.220.176.0/20
+
+-----BEGIN SIGNATURE-----
+CphdY76ofLDDsBzKseuivh9fp8j8f95xZSQrs75MF+GU0nP5OKKtn
+J6UvFLZH6L8YEWcxiGGuwTzgK0Puea+slXnXU+UgalmitqJOHwXbo
+bAm7DCWou2wT2fIWqZHTUpX99/jFlSn34ozp2NFWJCT8ba4WlNgnI
+sevnaeoe2KzEUbaawYCOskLU9B7aAPFhBHbuGGhQYpx08n3zLYj1R
+MIOyOyl8NuSi3cfI0KbRZjhtIF3Pe9LebuqrwiBhRaFxzvFLM4g6z
+Dff62/7Hnmt6PFio0Rn1UWPq2plDymT5peluCdDiL3M/DsGrEgqRf
+wQKqll6HuRKaZVoHa0cNWPdw==
+-----END SIGNATURE-----
+\end{lstlisting}
 
 \subsection{ROV}
 
-Addresses/Prefixes.  ASNs.  RIRs.  Routing.  Routing security.  History
-and time line to RPKI.
+Network operators can now create ROA objects for their address prefixes
+and publish them in the RPKI.  This activity achieves only half of the
+needed action to be useful, because the RPKI and ROAs are of little
+value until they are used to validate BGP routing data.  To implement
+ROV, network operators are expected to setup a set RPKI caches on the
+local network, sometimes referred to as validators.  These validators
+periodically fetch RPKI data from the designated anchors in repository
+hierarchy.  The validators are then used in tandom with ROV-enabled
+routers, whereby routers load validated ROA objects to be used as part
+of the route processing path when BGP updates are received.  Most modern
+routers support this functionality, allowing an operator to use ROV as
+just another option to influence actions in the BGP policy processing
+chain.
 
-The Resource Public Key Infrastructure (RPKI), an Internet
-routing-specific PKI, anchored at the five regional Internet registries
-(RIRs) is the starting point for a repository of cryptographically
-signed route object authorizations (ROAs).  ROAs
+Colloquially known as route origin validation (ROV), BGP-speaking
+routers can then use the RPKI and ROAs to influence processing rules
+when BGP route updates are received.\cite{bush_origin_2014}  If a route
+update is covered by a published ROA, a ROV-enabled router compares the
+origin AS and prefix length in the update with an unexpired ROA.  The
+action to take when ROV fails is a local policy decision, but most
+operators either decrease the preference for the route or reject it
+outright.\footnote{As of February 11, 2019, AT\&T began "dropping all
+RPKI-invalid route announcements" from
+peers\cite{borkenhagen_at&t/as7018_2019}  This was considered a major
+milestone that could help encourage other providers yet to deploy
+RPKI-based technology.}
 
 \section{Methodologies}\label{sec:Methodologies}
 
@@ -284,9 +364,10 @@ Baf.
 John is grateful for the networking position he holds at DePaul
 University, which facilitates the ability to conduct meaningful
 experiments such as those in ARIN's operational test and evaluation
-environment (OTE).  John is also indebted to Patrick W.  Gilmore, who
+environment (OTE) used to better understand the technology presented in
+this paper.  John is also indebted to Patrick W.  Gilmore, who
 generously made his time available to answer questions about the 1997
-routing event commonly known as the \emph{7007 Incident}.
+\emph{7007 Incident}.
 
 \end{acks}
 
