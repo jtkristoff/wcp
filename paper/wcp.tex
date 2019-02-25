@@ -147,16 +147,16 @@ concludes in \S \ref{sec:Conclusion}.
 \section{Background}\label{sec:Background}
 
 Secure routing conjures up images of different solutions for different
-challenges.  To secure routing could imply mechanisms to thwart
-byzantine failure or the use of encryption to protect the privacy of
-routing data in transit.  It may may suggest a series of operator best
-practices to limit access and configuration mistakes with hardware.  For
-the purposes of this paper, and in terms of BGP, this paper is
-particularly concerned with authenticating the origin AS in the AS path
-attribute and the authorization granted the AS to originate an
-associated address prefix in the update message.  Attention therefore
-coverges on a subset of technologies that arose out of the Secure
-Inter-Domain Routing (SIDR) working group in the IETF.
+challenges.  One might dream of mechanisms to thwart byzantine failure
+or the use of encryption to protect the privacy of routing data in
+transit.  It may may suggest a series of access control best practices
+or sane configuration defaults on hardware.  For the purposes of this
+paper, and in terms of BGP, this paper is particularly concerned with
+authenticating the origin AS in the AS path attribute and the
+authorization granted the AS to originate an associated address prefix
+in the update message.  Attention therefore coverges on a subset of
+technologies that arose out of the Secure Inter-Domain Routing (SIDR)
+working group in the IETF.
 
 While a complete tutorial and history of approaches to secure routing on
 the Internet is beyond the scope of this paper, a brief review of
@@ -262,7 +262,7 @@ prefixes.\cite{lepinski_infrastructure_2012}  The RPKI is formally
 structured with each regional Internet registry (RIR) anchoring the
 repository with the allocated address space they are responsible for.
 Address holders work with their respective RIR to populate the RPKI or
-to coordinate further delegation of the repository further.
+to coordinate a delegation of partial repository data further.
 
 The RPKI could be thought of as cross between the IRR system and a
 PKI-based system like those of attempted by S-BGP and soBGP.  The RPKI,
@@ -277,21 +277,21 @@ validation, an overview of which is covered below.
 \subsection{ROAs}
 
 Route origin authorizations (ROAs) are individually signed objects
-associating allocated address prefixes with an authorized AS to
+associating allocated address prefixes with an AS authorized to
 originate routes for these prefixes in the BGP system.  Neither BGP
 route updates nor RIR address allocation records alone make this
 relationship explicit.  With the RPKI system and the ability to populate
 it with ROAs, the Internet routing system now has the two key building
 blocks on the way toward a secure routing infrasturcture.
 
-See Listing~\ref{lst:ROA} for an example ROA as recently published in
-the American Registry for Internet Numbers (ARIN) RIR operational test
-and evaluation environment.  A ROA can have only one origin AS
-associated with one or more prefixes.  Each prefix can specify a
-\emph{maxLength} value for the prefix, indicating the most specific
-prefix length the origin AS is authorized to announce.  Like X.509
-certificates, other attributes such as a digital signature and
-expiration time are associated with each ROA.
+A ROA can have only one origin AS associated with one or more prefixes.
+Each prefix can specify a \emph{maxLength} value for the prefix,
+indicating the most specific prefix length the origin AS is authorized
+to announce.  Like X.509 certificates, other attributes such as a
+digital signature and expiration time are associated with each ROA.  See
+Listing~\ref{lst:ROA} for an example ROA as recently published in the
+American Registry for Internet Numbers (ARIN) RIR operational test and
+evaluation environment.
 
 \begin{lstlisting}[float,basicstyle=\footnotesize\ttfamily,caption={Example AS 20130 ROA},label={lst:ROA}]
 ROA Name: DEPAUL AS20130
@@ -316,26 +316,13 @@ wQKqll6HuRKaZVoHa0cNWPdw==
 
 \subsection{ROV}
 
-Network operators can now create ROA objects for their address prefixes
-and publish them in the RPKI.  This activity achieves only half of the
-needed action to be useful, because the RPKI and ROAs are of little
-value until they are used to validate BGP routing data.  To implement
-ROV, network operators are expected to setup a set RPKI caches on the
-local network, sometimes referred to as validators.  These validators
-periodically fetch RPKI data from the designated anchors in repository
-hierarchy.  The validators are then used in tandom with ROV-enabled
-routers, whereby routers load validated ROA objects to be used as part
-of the route processing path when BGP updates are received.  Most modern
-routers support this functionality, allowing an operator to use ROV as
-just another option to influence actions in the BGP policy processing
-chain.
-
 Colloquially known as route origin validation (ROV), BGP-speaking
-routers can then use the RPKI and ROAs to influence processing rules
+routers can use the RPKI and ROAs to influence routing policy deciions
 when BGP route updates are received.\cite{bush_origin_2014}  If a route
-update is covered by a published ROA, a ROV-enabled router compares the
-origin AS and prefix length in the update with an unexpired ROA.  The
-action to take when ROV fails is a local policy decision, but most
+update is covered by a published, valid ROA, a ROV-enabled router
+compares the origin AS and prefix length in the update with
+corresponding data found in the ROA.  What a router will do when a route
+update experiences a ROV failure is a local policy decision, but most
 operators either decrease the preference for the route or reject it
 outright.\footnote{As of February 11, 2019, AT\&T began "dropping all
 RPKI-invalid route announcements" from
@@ -343,9 +330,112 @@ peers\cite{borkenhagen_at&t/as7018_2019}  This was considered a major
 milestone that could help encourage other providers yet to deploy
 RPKI-based technology.}
 
+To implement ROV, network operators are expected to deploy a set of RPKI
+caches, sometimes referred to as validators, on their local network.
+These validators periodically fetch repository data from the designated
+anchors in RPKI hierarchy.  The validators are then used in tandom with
+ROV-enabled routers, whereby routers load validated ROA object detail,
+suitable for use as part of the BGP policy processing rules setup by the
+local network operator.
+
+The RPKI, ROA management, and ROV deployment has stirred the interest of
+standards bodies, networks operators, and vendors in recent years.
+Consequently, measuring the depoyment of the RPKI and ROV based on
+published ROAs has attracted an equal amount of attention from the
+Intenret research community.  The next section will critically analyze
+some of this most recent research activity.
+
 \section{Methodologies}\label{sec:Methodologies}
 
-Hmm.
+The RPKI infrastructure along with associated ROV capabile validators
+and routers are still relatively new technology.  Some of the base
+specifications were only finalized and published in 2012.  Deployment
+began in earnest and by 2013 public monitoring emerged to track the
+technology's deployment status and to collect
+statistics.\cite{nist_rpki_2019}  One of the earliest research papers
+focused on identifying how the RPKI was being used, paying particular
+attention to the quality of ROAs network operators would putting into
+the RPKI.\cite{iamartino_measuring_2015}  This work first broached the
+subject of evaluating ROV by performing an \emph{offline} analysis,
+comparing a snapshot of published ROAs with a snapshot of routing data
+from the Route Views project.\cite{oregon_routeviews_2019}  This work
+however did not attempt to discover if ROV was actively being performed
+on the Internet.  Approaches to measuring deployment of ROV is covered
+in the remainder of this section.
+
+\subsection{Uncontrolled Passive Measurement}\label{subsec:Uncontrolled Passive Measurement}
+
+RPKI repository data, and specifically the ROAs, can be freely and
+easily retrieved.  Normally the ROAs are ultimately used by routers to
+perform ROV, but can be useful for other purposes such as RPKI usage
+analysis and measurement projects.  Coupled with route collector systems
+such as those provided by RouteViews, researchers can perform a number
+of studies based on real-world data without having direct access to
+Internet routers.  In the literature this is referred to as uncontrolled
+passive measurement.
+
+\subsubsection{Description}
+
+Address allocations and ROAs are published in an open and transparent
+repository, a registry or RPKI respectively.  ROV however is a local AS
+policy decision, unpublished and generally unknowable to those
+unaffiliated with the local network administration.  The authors in
+\cite{gilad_are_2017} propose a method to uncover ROV usage in the
+Internet by evaluating when an AS originates both valid and invalid
+route announcements.   By examining different RouteViews vantage points,
+termed sensors by the authors, their technique infers ROV policy on the
+interceding path when one or both types (valid or invalid) of routes
+arrive at a sensor node.  The supposition is that if both routes arrive
+at a sensor, ROV is not in use by any AS listed in the AS path
+attribute.  If only the valid route arrives at a sensor node, the
+authors consider this evidence of ROV somewhere along the AS path.
+
+Figure \ref{fig:rov1} demonstrates this inference approach.  Two sensors
+see slightly different views of the toplogy.  AS 64500 originates two
+prefixes, one invalid, another valid according to the RPKI.  If AS 64501
+is performing ROV, only the valid route will be seen by sensor 1.
+Conversely, if AS 64502 does not perform ROV, both the valid and invalid
+routes will be seen by sensor 2.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.4\textwidth]{rov1}
+  \caption{Passive ROV Detection}
+  \label{fig:rov1}
+\end{figure}
+
+\subsubsection{Evaluation}
+
+In response to \cite{gilad_are_2017} another group of researchers found
+a number of limitations with this approach.\cite{reuter_towards_2018}
+One set of problems stem from the nuances of local BGP policy decisions
+made by each autonomous system.  For example, an AS that does not
+perform ROV may receive and process competing invalid and valid routes,
+but may select the valid route as the best path for reasons unrelated to
+ROV.  Only the best route will be propagated further, fooling an
+uncontrolled passive measurement approach.  Another problem with this
+approach is that it requires the origination of an invalid route.  This
+may be a relatively rare event.
+
+The authors in \cite{gilad_are_2017} claimed to have discovered nine of
+the top ISPs were enforcing ROV.  However, \cite{reuter_towards_2018}
+could not duplicate these results.  The response paper found
+discprecpancies in results when they varied the number of sensors used,
+which may partially explain the different outcomes in the two papers.
+
+Publishing ROAs, at least for address space that is not sub-allocated to
+other customers, is a relatively simple operation compared to ROV.  It
+would stand to reason that a network performing ROV is likely to also be
+publishing ROAs, but the converse seems unlikely.  Neither paper
+explored this correlation however.
+
+\subsection{Active Controlled Measurement}
+\subsubsection{Discussion}
+\subsubsection{Evaluation}
+
+\subsection{Extended Controlled Measurement}
+\subsubsection{Discussion}
+\subsubsection{Evaluation}
 
 \section{Discussion}\label{sec:Discussion}
 
