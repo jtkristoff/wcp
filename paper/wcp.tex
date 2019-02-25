@@ -348,54 +348,54 @@ some of this most recent research activity.
 \section{Methodologies}\label{sec:Methodologies}
 
 The RPKI infrastructure along with associated ROV capabile validators
-and routers are still relatively new technology.  Some of the base
-specifications were only finalized and published in 2012.  Deployment
-began in earnest and by 2013 public monitoring emerged to track the
-technology's deployment status and to collect
-statistics.\cite{nist_rpki_2019}  One of the earliest research papers
-focused on identifying how the RPKI was being used, paying particular
-attention to the quality of ROAs network operators would putting into
-the RPKI.\cite{iamartino_measuring_2015}  This work first broached the
-subject of evaluating ROV by performing an \emph{offline} analysis,
-comparing a snapshot of published ROAs with a snapshot of routing data
-from the Route Views project.\cite{oregon_routeviews_2019}  This work
-however did not attempt to discover if ROV was actively being performed
-on the Internet.  Approaches to measuring deployment of ROV is covered
-in the remainder of this section.
+and routers are still relatively new technologies.  The base
+specifications were published in 2012.  Deployment began in earnest
+shortly thereafter and by 2013 public monitoring emerged to monitor
+deployment and collect statistics.\cite{nist_rpki_2019}  An early
+research paper focused on identifying how the newly deployed RPKI was
+being used, paying particular attention to the quality of ROAs network
+operators created for their prefixes.\cite{iamartino_measuring_2015}
+This work was among the first to consider whether routing data would
+validate against published ROAs.  The authors performed an
+\emph{offline} passive analysis, comparing a snapshot of published ROAs
+with a snapshot of routing data from the Route Views
+project.\cite{oregon_routeviews_2019}  Ever since, research interest in
+the deployment of the RPKI and ROV have begun to take shape.  More
+deployment strategies and measurement studies are now appearing as
+common themes in networking and security venues.  This section explores
+some recent advances in deployment and measurement.
 
-\subsection{Uncontrolled Passive Measurement}\label{subsec:Uncontrolled Passive Measurement}
+\subsection{Uncontrolled Passive ROV Measurement}
 
 RPKI repository data, and specifically the ROAs, can be freely and
-easily retrieved.  Normally the ROAs are ultimately used by routers to
-perform ROV, but can be useful for other purposes such as RPKI usage
-analysis and measurement projects.  Coupled with route collector systems
-such as those provided by RouteViews, researchers can perform a number
-of studies based on real-world data without having direct access to
-Internet routers.  In the literature this is referred to as uncontrolled
-passive measurement.
+easily retrieved.  Normally the ROAs are ultimately fed to the routing
+system for ROV, but can be used to inform RPKI usage and measurement
+studies.  Coupled with route collector systems such as those provided by
+the RouteViews project, researchers can study real-world data without
+having direct access to Internet routers.  Inferences can be made from
+this passively collected data, but a hypothesis cannot be tested without
+a control variable present.
 
-\subsubsection{Description}
+\subsubsection{Method}
 
 Address allocations and ROAs are published in an open and transparent
 repository, a registry or RPKI respectively.  ROV however is a local AS
-policy decision, unpublished and generally unknowable to those
-unaffiliated with the local network administration.  The authors in
-\cite{gilad_are_2017} propose a method to uncover ROV usage in the
-Internet by evaluating when an AS originates both valid and invalid
-route announcements.   By examining different RouteViews vantage points,
-termed sensors by the authors, their technique infers ROV policy on the
-interceding path when one or both types (valid or invalid) of routes
-arrive at a sensor node.  The supposition is that if both routes arrive
-at a sensor, ROV is not in use by any AS listed in the AS path
-attribute.  If only the valid route arrives at a sensor node, the
-authors consider this evidence of ROV somewhere along the AS path.
+policy decision, unpublished in any central repository and generally
+unknowable to those unaffiliated with the local network administration.
+The authors in \cite{gilad_are_2017} propose a method to uncover ROV
+enforcement in the Internet by evaluating routes received at RouteViews
+sensors or vantage points.  This study searches a sensor's collected
+data for an AS originating both valid and invalid prefixes when covering
+ROAs are published.  The supposition is when both valid and invalid
+prefixes arrive at a sensor from a common origin AS, ROV is not enforced
+along the AS path.
 
 Figure \ref{fig:rov1} demonstrates this inference approach.  Two sensors
 see slightly different views of the toplogy.  AS 64500 originates two
-prefixes, one invalid, another valid according to the RPKI.  If AS 64501
-is performing ROV, only the valid route will be seen by sensor 1.
-Conversely, if AS 64502 does not perform ROV, both the valid and invalid
-routes will be seen by sensor 2.
+prefixes, one valid, another invalid when evaluated with the RPKI.  If
+AS 64501 is ROV enforcing, only the valid route will be seen by sensor
+1.  Conversely, if AS 64502 is not ROV enforcing, sensor 2 will see both
+valid and invalid prefixes.
 
 \begin{figure}
   \centering
@@ -410,31 +410,106 @@ In response to \cite{gilad_are_2017} another group of researchers found
 a number of limitations with this approach.\cite{reuter_towards_2018}
 One set of problems stem from the nuances of local BGP policy decisions
 made by each autonomous system.  For example, an AS that does not
-perform ROV may receive and process competing invalid and valid routes,
+enforce ROV may receive and process competing invalid and valid routes,
 but may select the valid route as the best path for reasons unrelated to
 ROV.  Only the best route will be propagated further, fooling an
 uncontrolled passive measurement approach.  Another problem with this
-approach is that it requires the origination of an invalid route.  This
-may be a relatively rare event.
+approach is that it requires the origination of an invalid route to
+detect whether or not an AS along the path is ROV enforcing.  An AS
+originating both valid and invalid prefixes may be a relatively rare
+event.
 
 The authors in \cite{gilad_are_2017} claimed to have discovered nine of
 the top ISPs were enforcing ROV.  However, \cite{reuter_towards_2018}
-could not duplicate these results.  The response paper found
-discprecpancies in results when they varied the number of sensors used,
-which may partially explain the different outcomes in the two papers.
+could not duplicate these results.  The response paper attempted to
+recreate the measurement experiment and found the technique exhibited
+discprecpancies dependent upon the RouteViews sensor data being
+evaluated.  The original paper did not make their methods or specific
+data sources available so it was impossible to reconcile the differences
+seen between the two results.
 
 Publishing ROAs, at least for address space that is not sub-allocated to
-other customers, is a relatively simple operation compared to ROV.  It
-would stand to reason that a network performing ROV is likely to also be
-publishing ROAs, but the converse seems unlikely.  Neither paper
-explored this correlation however.
+downstream networks, is a relatively simple operation compared to ROV
+enforcement.  It would stand to reason that an AS enforcing ROV is
+likely to also be publishing some ROAs, but the converse seems unlikely.
+Neither papers took into account whether any of the networks considered
+ROV-enforcing also had published ROAs.  Only
+the\cite{reuter_towards_2018} paper disclosed a list of autonomous
+systems they detected to be enforcing ROV.  Historical ROAs are not
+readily available, but only two of the four networks identified as
+ROV-enforcing using a passive uncontrolled measurement approach have
+published ROAs as of this writing.  With a controlled active
+measurement approach, detailed in the next section, the three networks
+identified as ROV-enforcing all currently publish ROAs.
 
-\subsection{Active Controlled Measurement}
-\subsubsection{Discussion}
+\subsection{Controlled Active ROV Measurement}
+
+Rather than rely on uncontrolled passive ROV measurement data derived
+from networks whose connectivity and BGP policy are largely hidden from
+view, a controlled experiment with active measurement could be
+undertaken.  To measure ROV using this approach
+\cite{reuter_towards_2018} proposes a series of experiments that start
+with a set of prefixes and ROAs under their supervision.  Devising a
+series of experiments with these prefixes can produce direct
+observations that can in turn infer causation, leading to more reliable
+results.
+
+\subsubsection{Method}
+
+To observe ROV enforcement in the wild, researchers using this technique
+leveraged the PEERING testbed to originate two IPv4 /24 prefixes into
+the Internet BGP routing system.\cite{schlinker_peering:_2014}  Of the
+two prefixes announced, one is a control prefix and always has a valid
+associated ROA.  The other prefix oscillates between a valid and invalid
+state when its associated ROA changes during the experiment.
+
+To minimize ambiguity about a network's ROV policy, only networks with
+vantage points (referred to as sensors by other researchers) and direct
+neighbors of the PEERING testbed are evaluated.  Futhermore, each
+vantage point is verified at the start of the experiment to ensure it
+can see both prefixes with valid associated ROAs.
+
+If a vantage point is unable to see the invalid experimental prefix or
+has a different route for the invalid prefix, the neighbor at this
+vantage is presumed ROV-enforcing.
+
 \subsubsection{Evaluation}
 
+This approach significantly improves the reliability of detecting ROV
+enforcement compared to the uncontrolled passive approach.  However,
+this technique is limited in the number of networks it can evaluate
+since the PEERING testbed has a limited number of neighbors. The number
+of top ISPs connecting to the testbed is quite limited (roughly 15\% of
+the top 100).  The controlled active approach greatly improves the
+accuracy and robustness over an uncontrolled passive approach.
+Conceivably this approach could conducted on a larger scale, using
+larger well-connected networks instead of just the testbed.
+
+This approach might be susceptible to false positives if ROA propagation
+time, router recalculation behavior, or validator caching intervals are
+not considered.  These researchers noted these potential problems and
+designed experiments to limit their effects by withdrawing a route
+before a ROA change and then subsequently issuing an announcement
+after the ROA was changed.
+
+% how long to notice invalid?  depends on ROV validator cache timers?
+% might be a useful measure
+
 \subsection{Extended Controlled Measurement}
-\subsubsection{Discussion}
+
+\subsubsection{Method}
+\subsubsection{Evaluation}
+
+% combine with next section?
+\subsection{Deployment Challenges}
+% security concerns?  ARIN?  Sub-allocations/dependecies
+% \subsection{ROA maxLength}
+\subsubsection{Method}
+\subsubsection{Evaluation}
+
+\subsection{Encouraging Deployment}
+%% \subsection{Partial Deployment}
+\subsubsection{Method}
 \subsubsection{Evaluation}
 
 \section{Discussion}\label{sec:Discussion}
@@ -443,6 +518,8 @@ Hah.
 
 \section{Future Work}\label{sec:Future Work}
 
+% provider-specific looking glasses should support rpki
+% use of bmp for route collectors?
 Baz.
 
 \section{Conclusion}\label{sec:Conclusion}
