@@ -459,9 +459,10 @@ results.
 To observe ROV enforcement in the wild, researchers using this technique
 leveraged the PEERING testbed to originate two IPv4 /24 prefixes into
 the Internet BGP routing system.\cite{schlinker_peering:_2014}  Of the
-two prefixes announced, one is a control prefix and always has a valid
-associated ROA.  The other prefix oscillates between a valid and invalid
-state when its associated ROA changes during the experiment.
+two prefixes announced, one is a control prefix whose announcement will
+always pass validation with a corresponding ROA.  The other prefix
+oscillates between a valid and invalid state when its associated ROA
+changes during the experiment.
 
 To minimize ambiguity about a network's ROV policy, only networks with
 vantage points (referred to as sensors by other researchers) and direct
@@ -478,30 +479,171 @@ vantage is presumed ROV-enforcing.
 This approach significantly improves the reliability of detecting ROV
 enforcement compared to the uncontrolled passive approach.  However,
 this technique is limited in the number of networks it can evaluate
-since the PEERING testbed has a limited number of neighbors. The number
-of top ISPs connecting to the testbed is quite limited (roughly 15\% of
-the top 100).  The controlled active approach greatly improves the
-accuracy and robustness over an uncontrolled passive approach.
-Conceivably this approach could conducted on a larger scale, using
-larger well-connected networks instead of just the testbed.
+since the PEERING testbed connects to a relatively small number of
+neighbors. The number of top ISPs connecting to the testbed is roughly
+15\% of the top 100.  Nonetheless, txe controlled active approach
+greatly improves the accuracy and robustness over an uncontrolled
+passive approach.  The team from \cite{reuter_towards_2018} identified
+three networks performing ROV using this method, all three confirmed
+when this result when contacted.  Conceivably this approach conducted on
+a larger scale, using larger well-connected networks instead of just the
+testbed, could uncover a high number of ROV-enforcing networks.
 
-This approach might be susceptible to false positives if ROA propagation
+This method might be susceptible to false positives if ROA propagation
 time, router recalculation behavior, or validator caching intervals are
-not considered.  These researchers noted these potential problems and
-designed experiments to limit their effects by withdrawing a route
-before a ROA change and then subsequently issuing an announcement
-after the ROA was changed.
+not considered.  These researchers understood these potential problems
+and designed experiments to limit their effects by withdrawing a route
+before a ROA change and then subsequently issuing an announcement once
+the change was submitted.  A potentially useful follow up study would
+seek to characterize ROA propagation behavior in the wild.
 
-% how long to notice invalid?  depends on ROV validator cache timers?
-% might be a useful measure
+\subsection{Data Plane Experiments}
 
-\subsection{Extended Controlled Measurement}
+Thus far, approaches to ascertain ROV enforcement have centered on
+routing messages or routing table snapshots.  These sources of insight
+derive from the network control plane.  That is, this data collected
+says something about how the network is organized and the decisions
+individual routers purport to make, but taken in isolation does not say
+how real-world  data traffic actually traverses real world networks on
+an end-to-end basis.  Furthermore, unless it were possible to compile a
+complete picture of the entire Internet routing system, there will
+likely be some disparity in the conclusions.  A third approach to
+evaluate ROV enforcement therefore examines actual traffic, or the data
+plane.
 
 \subsubsection{Method}
+
+The authors of \cite{reuter_towards_2018} suggest in passing a way to
+extend the reach of their controlled active method when a vantage point
+is not available on a network peered with the testbed, but traceroute,
+reverse traceroute, or a RIPE Atlas probe
+is.\cite{katz-bassett_reverse_2010}\cite{ripe_ncc_staff_ripe_2015} Data
+traffic would be sent from a candidate ROV network connected to the
+testbed network, at a monitor on the origin AS.  Observing the ingress
+peer interface for which trace traffic arrives, ROV enforcement could be
+observed.
+
+In \cite{hlavacek_practical_2018}, the authors announce a pair of
+prefixes both originating from two distinct autonomous systems.  A pair
+of ROAs for these prefixes are created.  However, while each AS
+announces both prefixes, only one AS is valid for each prefix according
+to published ROAs.  Without ROV, it would appear the two prefixes are
+each multihomed to each AS or used in a common BGP anycast arrangement.
+For this experiment, traceroute probes towards the prefixes from RIPE
+Atlas probes are run.  Each reported hop from the traceroute output is
+translated to the associated AS originating a prefix for that router hop
+address.  This in essence constructs a virtual data plane derived AS
+path.  Inference for ROV enforcement can then made based on the networks
+seen in the traceroute data plane paths for a particular test prefix.
+
+A third approach evaluates the arrival of SYN/ACK responses from TCP
+destination port 80 probes from test prefixes to Alexa top websites as
+proposed in \cite{hlavacek_practical_2018}.\cite{noauthor_alexa_2018}
+This method makes inferences about ROV enforcement when responses arrive
+to invalid AS originating an associated prefix.
+
 \subsubsection{Evaluation}
 
-% combine with next section?
+Using data plane inference to detect ROV is problematic.  If the source
+and destination networks are peering neighbors, results can be reliable,
+but otherwise autonomous BGP policy decisions and can mask a number of
+unforeseen reasons a router or network selects a best path.  The authors
+of \cite{hlavacek_practical_2018} acknowledge the uncertainty of their
+results and claim to prove only 0.1\% of evaluated paths ROV enforcing.
+The authors did not disclose the networks detected as ROV enforcing nor
+an indication whether administrators verified their findings.  It is
+reasonable to retain some amount of skepticism without details of the
+finds, raw data, or manual verification.
+
+The authors identify noise introduced with the traceroute data, such as
+packet loss.  Other factors may influence the results, including
+inconsistent ROV enforcement within an AS, multihoming, traffic load
+balancing, and path asymmetry.  Using the SYN/ACK technique, data plane
+inference is even less reliable.  In this case, probes towards Alex web
+sites may not all arrive at the same destination instance.  Web sites
+may be distributed with content distribution network.  If different
+probes or responses traverse entirely different paths, filtering the
+results will be required, but difficult since the only observation is in
+the reply that returns to the source.
+
+Any claim of proof seems suspect unless the authors verified their
+findings with network administrators.  They reason that an AS only sees
+valid announcements and never invalid paths must be ROV enforcing.  They
+do not make available the code or data to recreate this experiment, so
+that this claim can be verified.  The results from these data plane
+experiments verify even fewer ROV enforcing networks than reported in
+\cite{reuter_towards_2018}.  False negatives with the data plane methods
+outlined here are likely higher.  While the experiments are active and
+some controlled, ambiguity is introduced when trying to evaluate ROV
+enforcement when there are multiple intervening AS hops in a path.  It
+is difficult if not impossible to deduce with certainty routing policy
+that may exist between the different pairs of AS neighbors when
+observing from afar.
+
 \subsection{Deployment Challenges}
+
+As of this writing, depending on how one counts, deployed ROAs cover
+approximately 10\% to 15\% of the IPv4 Internet.  While a direct
+comparison cannot be made, signed DNSSEC zones see high levels of
+participations at or near the top of the name space, but is much more
+sparse below.  Nonetheless, many zones have been signed, but compared to
+all possible zones, the coverage rate is about an order of magnitude
+smaller than ROAs.  This may say more about the RPKI than DNSSEC.
+DNSSEC is a much older technology, but there is also much more
+individual DNS data to sign than routing data.  ROV adoption on the
+other hand appears to still be in its infancy, but appears poised to
+see steady growth.  While deployment of the RPKI, ROAs, and ROV
+enforcement is encouraging, barriers and difficulties remain.
+
+\subsubsection{Political, Economic, and Social Challenges}
+
+As reported in \cite{yoo_lowering_2018}, not all deployment challenges
+are technical in nature.  For instance, ARIN, the North American RIR,
+requires users of their portion of the RPKI to overcome strict legal
+obstacles spelled out in their terms and conditions agreements.
+Adoption in the ARIN region is believed to be artifically limited due to
+these legal concerns.  Each RIR operates differently.  In fostering
+deployment of securing routing, RIPE is leading by a significant amount.
+They see a much higher participation rate than any other RIR by a wide
+margin.  In \cite{alex_band_ripe_2015}, it was demonstrated that a
+series of focused interface improvements and constituent engagement
+helped foster deployment of the RPKI in the RIPE community.
+
+Perhaps the most cited deployment challenge with any new technology is
+achieving critical mass, when participation is its own reward, but where
+there is little incentive for early adopters.  Publishing ROAs is
+relatively easy, but there is little advantage in doing so if networks
+are not performing ROV.  One suggestion by \cite{gilad_are_2017} is to
+encourage ROV deployment in the core of the Internet, by the largest
+ISPs.  Their evaluation argues that this is where the value of ROV
+deployment eclipses the majority of networks.
+
+New systems may also experience failures or begin with low quality data.
+Invalid ROAs may pose a problem.  If an AS incorrectly populates the
+RPKI with an incorrect ROA and other networks are ROV enforcing, the
+origin AS may suddenly find themselves disconnected from the Internet.
+This potential problem has convinced some networks to only depreference
+invalid routes rather than reject them outright.  Recent research
+has produced two complimentary monitoring systems.  The Rov Deployment
+Monitoring (RDM) system from the \cite{reuter_towards_2018} team publishs a
+regular report on ROV deployment as detected by their measurement
+methods.  The RDM provides a searchable interface to explore the ROV
+status of observed networks.  The \cite{gilad_are_2017} team has created
+the ROAlert system.  As its name implies, this system is concerned with
+the signed data, the ROAs.  It highlights potential ROA usage
+deployment problems such as address sub-allocation dependencies.
+
+A particular problem for large ISPs has been twofold.  In publishing
+ROAs, they must take care to avoid invalidating more specific routes
+from originating from customers.  For instance, if AS 49152 is allocated
+192.0.2.0/24 and publishes a ROA for that specific prefix, but then
+sub-allocates 192.0.2.128/25 to a customer 49153, the customer's
+announcement will appear invalid.  The other problem is when an ISP
+enforces ROV and ends up rejecting routes that are invalid, but
+unintentionally so.  While this may seem like a necessary trade-off,
+ISP customers often don't appreciate these trade-offs if they become
+unreachable or unable to reach something they care about.
+
 % security concerns?  ARIN?  Sub-allocations/dependecies
 % \subsection{ROA maxLength}
 \subsubsection{Method}
