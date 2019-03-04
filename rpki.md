@@ -74,6 +74,8 @@ satisfy UIC Computer Science PhD degree requirements.
 
 * Montgomery D. Murphy S. [Track: Practical BGP Origin Validation using RPKI: Vendor Support, Signing, and Validation Services](https://www.youtube.com/watch?v=dL1tK45G2AY).  NANOG 67, June 2016.
 
+* Benjamin, M.  [BGP - From Route Hijacking to RPKI: How Vulnerable is the Internet?](https://www.virusbulletin.com/conference/vb2016/abstracts/last-minute-paper-bgp-route-hijacking-rpki-how-vulnerable-internet).  VB2016, October, 2016.
+
 * Reuter A.  [Measuring the Adoption of RPKI Route Origin Validation: Update](https://ripe76.ripe.net/archives/video/32/).  Lightning talk, RIPE 76, May 2018.
 
 * Shulman, H.  [On RPKI's Deployment and Security of BGP](https://www.youtube.com/watch?v=F3nCYtg0Rso).  ACNS 2018.
