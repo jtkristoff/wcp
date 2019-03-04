@@ -7,6 +7,8 @@ Committee: [Jason Polakis](https://www.cs.uic.edu/~polakis/) (chair),
 Selected Topic:
 
 * [The RPKI and Route Origin Validation: Advances in Deployment and Measurement](rpki.md)
+* Paper: [submitted](paper/rpki-201902261114.pdf), [current](paper/wcp.pdf)
+* [Talk](talk/wcp.pdf)
 
 Other Topic Ideas:
 
