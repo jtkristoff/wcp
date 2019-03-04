@@ -8,7 +8,7 @@ Selected Topic:
 
 * [The RPKI and Route Origin Validation: Advances in Deployment and Measurement](rpki.md)
 * Paper: [submitted](paper/rpki-201902261114.pdf), [current](paper/wcp.pdf)
-* [Talk](talk/wcp.pdf)
+* [Presentation](talk/wcp.pdf)
 
 Other Topic Ideas:
 
