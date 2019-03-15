@@ -76,13 +76,13 @@ selection decisions further downstream.
 
 In addition to the added complexity local policy configurations imply,
 the data conveyed in routing update messages between BGP speakers come
-with no express means of authenticity.  This means that by default, as
-long as the BGP message is well formed, a routing update with invalid
-path data may find its way into the path computation process, wreaking
-havoc and corrupting the computed topology of one or more autonomous
-systems.  How does a BGP receiver evaluate routing information when an
-autonomous neighbor is untrustworthy either due to accident or malicious
-intent?  Approaches to protection from invalid routing data have varied,
+with no express means of authenticity.  Therefore by default, as long as
+the BGP message is well formed, a routing update with invalid path data
+may find its way into the path computation process, wreaking havoc and
+corrupting the computed topology of one or more autonomous systems.  How
+does a BGP receiver evaluate routing information when an autonomous
+neighbor is untrustworthy either due to accident or malicious intent?
+Approaches to protection from invalid routing data have varied,
 haphazardly dealt with in each autonomous system as a local policy
 decision.  Consequently, overall Internet routing infrastructure
 robustness against invalid routing data varies widely from AS to AS.
@@ -168,7 +168,7 @@ encouraged to review the references provided for additional detail.
 
 Two BGP capabilities frequently used to limit undesirable or unexpected
 routing updates are route filters and prefix limits.  A route filter is
-list of one or more rules that evaluates a received announcement in a
+a list of one or more rules that evaluates a received announcement in a
 route update and decides whether to accept, reject, or alter the
 announcement for local route computation.  A prefix limit is a
 threshold, an expected upper limit of prefixes a BGP neighbor is
@@ -242,8 +242,8 @@ security would take hold.
 
 \subsection{S-BGP and soBGP}
 
-At the turn of the 21st century, two extensions to BGP, S-BGP and soBGP,
-were proposed to incorporate cryptographic authentication into the
+At the turn of the 21st century two extensions to BGP, S-BGP and soBGP,
+proposed the incorporation of cryptographic authentication into the
 routing system.\cite{kent_secure_2000}\cite{white_securing_2003}  Both
 approaches specified a public key infrastructure (PKI) and both modified
 BGP to incorporate authentication signaling into the routing protocol.
@@ -393,8 +393,8 @@ along the AS path.
 Figure \ref{fig:rov1} demonstrates this inference approach.  Two sensors
 see slightly different views of the topology.  AS 64500 originates two
 prefixes, one valid, another invalid when evaluated with the RPKI.  If
-AS 64501 is ROV enforcing, only the valid route will be seen by sensor
-1.  Conversely, if AS 64502 is not ROV enforcing, sensor 2 will see both
+AS 64501 is ROV-enforcing, only the valid route will be seen by sensor
+1.  Conversely, if AS 64502 is not ROV-enforcing, sensor 2 will see both
 valid and invalid prefixes.
 
 \begin{figure}
@@ -415,7 +415,7 @@ but may select the valid route as the best path for reasons unrelated to
 ROV.  Only the best route will be propagated further, fooling an
 uncontrolled passive measurement approach.  Another problem with this
 approach is that it requires the origination of an invalid route to
-detect whether or not an AS along the path is ROV enforcing.  An AS
+detect whether or not an AS along the path is ROV-enforcing.  An AS
 originating both valid and invalid prefixes may be a relatively rare
 event.
 
@@ -551,14 +551,14 @@ and destination networks are peering neighbors, results can be reliable,
 but otherwise autonomous BGP policy decisions can mask a number of
 unforeseen reasons a router or network selects a best path.  The authors
 of \cite{hlavacek_practical_2018} acknowledge the uncertainty of their
-results and notably claim to prove only 0.1\% of evaluated paths are ROV
-enforcing.  The authors did not disclose the networks detected as ROV
-enforcing nor indicate whether administrators verified their findings.
-It is reasonable to retain some amount of skepticism without details of
-the findings, raw data, or manual verification.
+results and notably claim to prove only 0.1\% of evaluated paths are
+ROV-enforcing.  The authors did not disclose the networks detected as
+ROV-enforcing nor indicate whether administrators verified their
+findings.  It is reasonable to retain some amount of skepticism without
+details of the findings, raw data, or manual verification.
 
 The authors identify noise introduced with the traceroute data, such as
-packet loss.  Other factors influence the results, including
+packet loss.  Other factors may influence the results, including
 inconsistent ROV enforcement within an AS, multihoming, traffic load
 balancing, and path asymmetry.  Origin-only observation from SYN/ACK
 responses to probes is the least stable method.  In this case, probes
@@ -573,10 +573,10 @@ record route option is not used.
 
 Any claim of proof seems suspect unless the authors verified their
 findings with network administrators.  They reason that an AS that only
-sees valid announcements and never invalid paths must be ROV enforcing.
+sees valid announcements and never invalid paths must be ROV-enforcing.
 They do not make available the code or data to recreate this experiment,
 so that this claim can be verified.  The results from these data plane
-experiments verify even fewer ROV enforcing networks than reported in
+experiments verify even fewer ROV-enforcing networks than reported in
 \cite{reuter_towards_2018}.  False negatives with the data plane methods
 outlined here are likely higher.  While the experiments are active and
 partially controlled, ambiguity is introduced when trying to evaluate
@@ -631,7 +631,7 @@ New systems may experience failures or begin with low quality data as
 users and input are introduced.  Invalid ROAs pose a particular problem
 as networks recoil from a technology if it is deemed not ready for
 production use.  If an AS incorrectly populates the RPKI with an
-incorrect ROA and other networks are ROV enforcing, the origin AS may
+incorrect ROA and other networks are ROV-enforcing, the origin AS may
 suddenly find themselves disconnected from the Internet.  This potential
 problem has convinced some networks to only depreference invalid routes
 rather than reject them outright.
@@ -654,8 +654,8 @@ sub-allocates 192.0.2.128/25 to a customer 49153, the customer's
 announcement will appear invalid until a customer-specific ROA is
 published.  Another problem is when an ISP enforces ROV and ends up
 rejecting routes that are invalid, but unintentionally so.  While this
-may seem like a necessary trade-off, network users may often prefer to
-connectivity over doing the right thing.  If a downstream network
+may seem like a necessary trade-off, network users may often prefer
+connectivity over "doing the right thing".  If a downstream network
 becomes unreachable or a downstream network is unable to reach something
 they care about due to ROV enforcement upstream, the downstream network
 may decide to connect to another upstream network that doesn't burden
@@ -708,14 +708,15 @@ attacks.  The routing community appears to be gravitating toward a
 stance of not using the maxLength field unless absolutely necessary.
 
 In some scenarios, the deployment of ROV may lead to unexpected network
-partitions or paths.  In partial ROV deployment scenarios, an ROV
-enforcing network may or may not receive the protection it might expect.
+partitions or paths.  In partial ROV deployment scenarios, an
+ROV-enforcing network may or may not receive the protection it might
+expect.
 
 Figure \ref{fig:collateral} recreates three possible scenarios described
 in \cite{gilad_are_2017}.  \emph{(a)} depicts the ideal scenario in
 partial ROV deployment.  Here AS 64510 performs ROV and protects 64511
 from the invalid route originated by AS 64496.  In \emph{(b)}, AS 64510
-does not perform ROV, but thd downstream AS 64511 does.  AS 64510
+does not perform ROV, but the downstream AS 64511 does.  AS 64510
 receives seemingly equal path options for the same prefix, but happens
 to select and relay the invalid route to AS 64511.  Unless AS 64511 has
 a default route through AS 64510 or another unseen path, it will be
@@ -723,10 +724,10 @@ disconnected from the valid origin AS 64495 entirely.  Disconnection may
 be preferable to forwarding traffic toward the wrong network however.
 Lastly, in \emph{(c)} a hijack occurs when  AS 64510 fails to perform
 ROV and relays a covering valid /24 prefix and a covering invalid, but
-more specific /24 prefix.   AS 64511 rejects the invalid more specific,
-but it doesn't matter, because when it sends traffic to AS 64510
-intended to reach the valid covering prefix the upstream AS  will follow
-the more specific invalid path anyway.
+also a more specific /25 prefix.  AS 64511 rejects the invalid more
+specific, but it doesn't matter, because it sends traffic to AS 64510
+matching the valid, but less specific prefix.  AS 64510 will then
+forward traffic towards the more specific invalid path anyway.
 
 \begin{figure*}
   \centering
@@ -740,7 +741,7 @@ the more specific invalid path anyway.
 An Internet RPKI infrastructure to support secure routing is available
 and actively being deployed.  Approximately 10\% of active AS networks
 on the Internet have published ROAs in the RPKI.   Research measurement
-studies attempting to uncover ROV enforcement deployment has uncovered
+studies attempting to uncover ROV enforcement deployment have uncovered
 very little use of ROAs to secure routing thus far.  Nonetheless,
 interest in ROV deployment appears to be on the verge of growth given
 the recent rise in activity by operators and researchers.  Meanwhile
@@ -777,7 +778,7 @@ RPKI usage and ROV enforcement.  Achieving additional visibility of ROV
 enforcement from deployed routers is currently only available by local
 administrators or through inference methods described above.  While some
 inference methods such as controlled active measurement produce reliable
-results, they offer a only a very partial view of the entire Internet
+results, they offer only a very partial view of the entire Internet
 secure routing posture.  To better understand ROV enforcement as
 deployed in the Internet, route collection systems should explicitly
 mark routes with the local validity state.
@@ -793,9 +794,9 @@ significantly enhancing measurement studies.  It is no small feat to
 alter the BGP specification however.  To evaluate this approach
 a unique community tag could be used for this purpose initially.
 
-The BGP Monitoring Protocol (BMP) is new capability of many
+The BGP Monitoring Protocol (BMP) is a new capability of many
 routers.\cite{scudder_bgp_2016} BMP exports routing table and peer
-status to a BMP collector.  BMP is essence provides a remote, passive
+status to a BMP collector.  BMP in essence provides a remote, passive
 view of BGP state to a collector.  BMP was designed to supplant and
 improve upon more rudimentary route collection systems that are often
 just \emph{screen scraping} the output of commands that display routing
@@ -831,7 +832,7 @@ experiments such as those in ARIN's operational test and evaluation
 environment (OTE) used to better understand the technology presented in
 this paper.  John is also indebted to Patrick W.  Gilmore, who
 generously made his time available to answer questions about the 1997
-\emph{7007 Incident}.
+\emph{AS 7007 Incident}.
 
 \end{acks}
 
